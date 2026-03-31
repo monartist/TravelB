@@ -1,19 +1,33 @@
-# app.py
+from flask import Flask, render_template, request, redirect, url_for
 
-# This class represents our "Trip" table in the database
-class Trip:
-    def __init__(self, title, destination):
-        self.title = title
-        self.destination = destination
+app = Flask(__name__)
 
-# This list acts as our temporary database
-database = []
+# --- ROUTES ---
 
-def create_trip(title, destination):
-    new_trip = Trip(title, destination)
-    database.append(new_trip)
-    return f"Trip to {destination} created!"
+@app.route('/')
+def index():
+    # This is the landing page
+    return render_template('index.html')
 
-if __name__ == "__main__":
-    print(create_trip("Summer Break", "Lonodn"))
-    print(f"Items in database: {len(database)}")
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        # Logic to save user would go here
+        return redirect(url_for('login'))
+    return render_template('register.html')
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/dashboard')
+def dashboard():
+    # Mock data for upcoming sessions
+    events = [
+        {'title': 'Morning Yoga', 'date': 'Oct 12', 'time': '8:00 AM'},
+        {'title': 'Run Club', 'date': 'Oct 14', 'time': '6:00 PM'}
+    ]
+    return render_template('dashboard.html', events=events)
+
+if __name__ == '__main__':
+    app.run(debug=True)
